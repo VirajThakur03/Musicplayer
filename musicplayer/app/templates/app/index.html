@@ -1,0 +1,73 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Music Player</title>
+    <link rel="icon" href="{% static 'favicon.ico' %}">
+    {% tailwind_css %}
+</head>
+<body class="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black text-white">
+<div class="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.08),transparent_35%),radial-gradient(circle_at_80%_10%,rgba(255,255,255,0.05),transparent_28%)]"></div>
+<div class="relative flex min-h-screen flex-col lg:h-screen lg:flex-row">
+    {% if selected_song %}
+        <div class="w-full lg:w-1/2 flex items-start justify-center p-4 md:p-8 border-b lg:border-b-0 lg:border-r border-gray-800/80">
+            <div class="w-full max-w-md space-y-4">
+                <form method="get" class="w-full">
+                    <label for="songSelect" class="block text-sm text-gray-300 mb-2">Select Song</label>
+                    <select
+                        id="songSelect"
+                        name="song"
+                        onchange="this.form.submit()"
+                        class="w-full rounded-xl bg-white/10 border border-white/20 px-4 py-2 text-white shadow-inner shadow-black/30 focus:outline-none focus:ring-2 focus:ring-white/40"
+                    >
+                        {% for item in songs %}
+                            <option value="{{ item.id }}" {% if item.id == selected_song.id %}selected{% endif %} class="text-black">
+                                {{ item.title }} - {{ item.artist }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </form>
+                {% include "app/main.html" with song=selected_song %}
+            </div>
+        </div>
+
+        <div class="w-full lg:w-1/2 overflow-y-auto p-6 md:p-10 lg:p-12">
+            <h2 class="text-sm uppercase tracking-[0.2em] text-gray-400 mb-5">Live Lyrics</h2>
+            <div id="lyricsContainer" class="space-y-7 text-2xl md:text-3xl leading-loose font-light pb-20"></div>
+            <textarea id="lyricsRaw" hidden aria-hidden="true">{{ selected_song.lyrics|default:"[]" }}</textarea>
+        </div>
+    {% else %}
+        <div class="w-full flex items-center justify-center text-gray-300 text-xl">
+            No songs available.
+        </div>
+    {% endif %}
+</div>
+
+<style>
+    .lyric-line {
+        color: #9ca3af;
+        transition: color 0.25s ease;
+    }
+
+    .lyric-line.active {
+        color: #ffffff;
+    }
+
+    .lyric-word {
+        transition: color 0.2s ease;
+    }
+
+    .lyric-word.lyric-word--done,
+    .lyric-word.lyric-word--active {
+        color: #ffffff;
+    }
+
+    .lyric-word.lyric-word--future {
+        color: #6b7280;
+    }
+</style>
+
+<script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>

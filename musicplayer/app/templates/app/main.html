@@ -1,0 +1,141 @@
+<div class="w-full max-w-md bg-gradient-to-b from-white/15 to-white/5 backdrop-blur-2xl border border-white/20 rounded-3xl shadow-2xl shadow-black/40 p-6 space-y-6 transition-all duration-500">
+    <div class="relative">
+        <img
+             src="{{ song.image.url }}"
+             alt="{{ song.title }}"
+             class="w-full h-64 object-cover rounded-2xl shadow-xl transition duration-500 hover:scale-[1.03]">
+    </div>
+
+    <div class="text-center">
+        <h3 class="text-gray-400 text-sm uppercase tracking-widest">{{ song.artist }}</h3>
+        <h1 class="text-2xl font-semibold mt-1">{{ song.title }}</h1>
+    </div>
+
+    <audio id="audio"
+           src="{% if song.audio_file %}{{ song.audio_file.url }}{% else %}{{ song.audio_link }}{% endif %}"
+           preload="metadata">
+    </audio>
+
+    <div class="mt-4 bg-black/20 rounded-2xl p-4 border border-white/10">
+        <div class="flex justify-between text-xs text-gray-400 mb-2">
+            <span id="current">0:00</span>
+            <span id="duration">0:00</span>
+        </div>
+
+        <input
+            id="seekBar"
+            type="range"
+            min="0"
+            max="100"
+            value="0"
+            step="0.1"
+            class="w-full cursor-pointer"
+        >
+    </div>
+
+    <div class="flex justify-center items-center gap-8 md:gap-12 mt-8">
+        <button id="prev" class="premium-btn" type="button" title="Previous Song">
+            <span class="icon">&#9198;</span>
+            <span class="line"></span>
+        </button>
+
+        <button id="play" class="premium-btn main-btn" type="button">
+            <span id="playIcon" class="icon text-3xl">&#9654;</span>
+            <span class="line"></span>
+        </button>
+
+        <button id="next" class="premium-btn" type="button" title="Next Song">
+            <span class="icon">&#9197;</span>
+            <span class="line"></span>
+        </button>
+    </div>
+
+    <div class="flex items-center justify-between mt-4 bg-black/20 rounded-xl px-3 py-2 border border-white/10">
+        <input id="volume"
+               type="range"
+               min="0"
+               max="1"
+               step="0.01"
+               value="1"
+               class="w-32 accent-white">
+
+        <button id="fullscreen" class="text-sm text-gray-200 hover:text-white transition" type="button">
+            Fullscreen
+        </button>
+    </div>
+</div>
+
+<style>
+.premium-btn {
+    position: relative;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    padding: 10px 5px;
+}
+
+.premium-btn:hover {
+    transform: translateY(-3px) scale(1.1);
+    color: #ffffffcc;
+}
+
+.premium-btn:active {
+    transform: scale(0.9);
+}
+
+.premium-btn .line {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0%;
+    height: 2px;
+    background: white;
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+.premium-btn:hover .line {
+    width: 100%;
+}
+
+.main-btn {
+    font-size: 2.2rem;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.main-btn.playing {
+    animation: smoothPulse 1.4s infinite ease-in-out;
+}
+
+@keyframes smoothPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.12); }
+    100% { transform: scale(1); }
+}
+
+#seekBar {
+    appearance: none;
+    height: 6px;
+    border-radius: 10px;
+    background: linear-gradient(to right, white 0%, #374151 0%);
+    transition: background 0.2s ease;
+}
+
+#seekBar::-webkit-slider-thumb {
+    appearance: none;
+    height: 14px;
+    width: 14px;
+    border-radius: 50%;
+    background: white;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+#seekBar::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+}
+</style>
